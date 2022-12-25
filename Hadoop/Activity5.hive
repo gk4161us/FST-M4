@@ -1,0 +1,54 @@
+-- Create and use database
+
+create database office;
+use office;
+
+--Create employee table
+create table employee(id INT, name STRING, dept STRING, yoj INT, salary INT)
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' TBLPROPERTIES("skip.header.line.count"="1");
+
+--Load data into employee tabe
+LOAD DATA LOCAL INPATH '/root/EmpData.csv' INTO TABLE employee;
+
+
+-- Run queries in employee table
+SELECT * FROM employee;
+SELECT COUNT(*) FROM employee;
+
+=> OUT PUT:
+
+Ended Job = job_1671713511248_0001
+MapReduce Jobs Launched
+Stage-Stage-1: Map: 1  Reduce: 1   Cumulative CPU: 5.03 sec   HDFS Read: 13143 HDFS Write: 102 SUCCESS
+Total MapReduce CPU Time Spent: 5 seconds 30 msec
+OK
+15
+
+-- Exports to HDFS directory
+INSERT OVERWRITE DIRECTORY '/user/guna/HiveOut' ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM office.employee;
+
+====> OUTPUT:
+
+Moving data to directory hdfs://fdf1f453b917:9000/user/guna/HiveOut/.hive-staging_hive_2022-12-22_14-23-59_404_8054226946812867404-1/-ext-10000
+Moving data to directory /user/guna/HiveOut
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1   Cumulative CPU: 2.05 sec   HDFS Read: 5638 HDFS Write: 480 SUCCESS
+
+--Exports to LOCAL directory
+INSERT OVERWRITE LOCAL DIRECTORY '/root/HiveOutPut' ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM office.employee;
+
+=> OUTPUT:
+
+
+Moving data to local directory /root/HiveOutPut
+MapReduce Jobs Launched:
+Stage-Stage-1: Map: 1   Cumulative CPU: 1.74 sec   HDFS Read: 5667 HDFS Write: 480 SUCCESS
+Total MapReduce CPU Time Spent: 1 seconds 740 msec
+
+
+
+
+
+
